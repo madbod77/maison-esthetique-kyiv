@@ -1,0 +1,10 @@
+import http from 'node:http';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {readFile} from 'node:fs/promises';
+import {createBookingAPI} from './booking-api.mjs';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const port=Number(process.env.MAISON_PORT||4190);
+const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.svg':'image/svg+xml','.woff2':'font/woff2'};
+const bookingAPI=createBookingAPI();
+http.createServer(async(req,res)=>{try{const url=new URL(req.url,`http://${req.headers.host}`);if(url.pathname.startsWith('/api/booking/'))return await bookingAPI(req,res,url);const pathname=decodeURIComponent(url.pathname);if(!/^\/(?:$|index\.html$|maison-preview\.html$|styles\.css$|(?:app|booking|booking-model)\.js$|assets\/[\w.-]+$|data\/[\w.-]+$)/.test(pathname)){res.writeHead(404);res.end('Not found');return;}const file=path.resolve(root,'.'+(pathname==='/'?'/index.html':pathname));const data=await readFile(file);res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream','Cache-Control':'no-cache','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin'});res.end(data);}catch{res.writeHead(404);res.end('Not found');}}).listen(port,'127.0.0.1',()=>console.log(`Maison preview http://127.0.0.1:${port}/`));

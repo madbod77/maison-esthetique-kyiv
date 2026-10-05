@@ -1,0 +1,12 @@
+{
+  "name": "maison-esthetique-kyiv",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "build:pages": "node scripts/build.mjs && node scripts/build-pages.mjs",
+    "test": "node --test tests/*.test.mjs"
+  }
+}

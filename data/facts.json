@@ -1,0 +1,70 @@
+{
+  "business": {
+    "name": "Maison Esthétique",
+    "company_id": "1328326",
+    "booking_url": "https://n1394458.alteg.io/company/1328326/personal/menu",
+    "address_exact": "вулиця Костянтинівська, 37",
+    "city_verified": true,
+    "hours": "Пн-Нд 09:00-21:00",
+    "phone": "+380 93 170-75-54",
+    "website_listed": "https://maisonesthetique.com.ua/",
+    "website_result": "net::ERR_NAME_NOT_RESOLVED",
+    "ui_language": "uk",
+    "catalog_note": "Some service descriptions contain Russian text; do not infer a language switch.",
+    "city": "Київ",
+    "city_source": "Public supplied Instagram profile address and title, visually verified.",
+    "catalog_count": 195,
+    "categories_count": 23
+  },
+  "sources": {
+    "menu": "https://n1394458.alteg.io/company/1328326/personal/menu",
+    "services": "https://n1394458.alteg.io/company/1328326/personal/select-services",
+    "specialists": "https://n1394458.alteg.io/company/1328326/personal/select-master",
+    "calendar": "https://n1394458.alteg.io/company/1328326/personal/select-time",
+    "about": "https://n1394458.alteg.io/company/1328326/about"
+  },
+  "specialists": [
+    {
+      "name": "Вікторія",
+      "role_exact": "Косметолог"
+    },
+    {
+      "name": "Балюк Олена",
+      "role_exact": "Електролог"
+    },
+    {
+      "name": "Карпенко Зінаїда",
+      "role_exact": "Шугаринг, воскова депіляція, масаж"
+    },
+    {
+      "name": "Іваніцька Євгенія",
+      "role_exact": "Лазарист"
+    }
+  ],
+  "categories": [
+    "Електроепіляція",
+    "Косметологія",
+    "Естетика тіла",
+    "Спеціальні пропозиції місяця",
+    "Апаратна Косметологія",
+    "Косметологія обличчя інʼєкції",
+    "Косметологія Параорбітальна зона",
+    "Косметологія Контурна Пластика Губ",
+    "Косметологія Ботулінотерапія",
+    "Косметологія Плазмотерапія",
+    "Косметологія Ферменти",
+    "Косметологія Волосся",
+    "Косметологія Екзосоми",
+    "Косметологія Очищення Обличчя",
+    "Косметологія Пілінги",
+    "Косметологія Масаж Обличчя",
+    "Лазерна епіляція . Гоління чоловічої спини",
+    "Лазерна епіляція . Жіноча",
+    "Лазерна епіляція комплекси жіночі",
+    "Лазерна епіляція Чоловіча",
+    "Шугаринг/Віск Чоловічий",
+    "Шугарінг/Віск Жіночий",
+    "Масаж"
+  ],
+  "verified_at": "2026-10-04"
+}

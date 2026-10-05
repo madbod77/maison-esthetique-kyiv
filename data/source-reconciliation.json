@@ -1,0 +1,71 @@
+{
+  "snapshot_date": "2026-10-04",
+  "catalog": {
+    "expected_categories": 23,
+    "found_categories": 23,
+    "processed_categories": 23,
+    "expected_services": "all services rendered by source after loading last category",
+    "found_services": 195,
+    "processed_services": 195,
+    "rejected_services": 0,
+    "duplicate_service_ids": 0,
+    "missing_price_or_name": 0,
+    "unknown_durations": 2,
+    "manual_review": 0
+  },
+  "photos": {
+    "research_expected": "6–12",
+    "research_found_downloaded_candidates": 17,
+    "research_selected": 9,
+    "research_rejected": 8,
+    "coordinator_selected_for_website": 5,
+    "previous_verified_reception_selected": 1,
+    "total_instagram_images_for_website": 6,
+    "manual_review": 0
+  },
+  "booking": {
+    "menu": "live verified3entrychoices",
+    "services": "search/select/remove/totals verified",
+    "staff": "4namesandroles + compatibility verified",
+    "time": "calendar and real available slots verified",
+    "details": "name/phone/email/comment/consent and finalbutton observed",
+    "submitted": false,
+    "post_submit": "untested; unchanged official flow"
+  },
+  "linked_business_domain": "2026-10-04 DNS resolution failed; source functional scope=providedAltegio",
+  "limits": [
+    "Catalog is timestamped snapshot; prices and availability remain authoritative in Altegio.",
+    "No client booking was submitted. OTP/payment/cancel/reschedule/notification not tested.",
+    "Local Chromium emulation; physicaldevices/Safari unverified.",
+    "No public deployment performed."
+  ],
+  "local_verification": {
+    "coordinator_final_trusted_cdp_checks": 34,
+    "coordinator_passed": 34,
+    "independent_functional_checks": 66,
+    "independent_functional_passed": 66,
+    "viewports": [
+      320,
+      360,
+      390,
+      600,
+      601,
+      768,
+      850,
+      851,
+      1024,
+      1150,
+      1280,
+      1440,
+      1920
+    ],
+    "standalone_rendered_photos": 9,
+    "standalone_external_asset_requests": 0,
+    "js_errors": 0,
+    "independent_final_fix_recheck": {
+      "passed": 21,
+      "checks": 21,
+      "sha_bound": true
+    }
+  }
+}

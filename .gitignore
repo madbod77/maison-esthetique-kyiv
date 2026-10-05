@@ -1,0 +1,8 @@
+dist/
+node_modules/
+.DS_Store
+.maison-state/
+.env
+.env.*
+*.pem
+*.key

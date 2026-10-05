@@ -1,0 +1,10 @@
+Capability,Implementation,Verification boundary,Remaining limit
+Catalog195/23,Own page search/category/directions/details,Snapshot195unique23groups preserved,Prices are snapshot04.10.2026 until official connection
+Multiple services and totals,Own state and model,Local fixture multi-selection/removal/totals,20 services per appointment
+Staff compatibility,Own UI + server API,Fallback4 staff visible; API fixture compatible staff,Live API access needed
+Date time next available,Own calendar + server API,Only API slots; disconnected calendar explicitly blocked,Live API access needed
+Contact consent SMS confirmation,Own form + server API,Mock transport tests only; no real SMS/reservations,Authorized integration not connected
+Booking submission,Server-side recheck and same-session deduplication,Malformed timeout500response locks uncertain result,Persistent idempotency required before public production
+Payment agreements cancellation,Unsupported advanced rules fail closed,No payments/cancellation performed,Additional integration work needed for required flows
+Images contact sections Apple style,Existing assets/content preserved,Manifest byte comparison and browser views,No public publication
+Mobile keyboard motion,Responsive native dialog and controls,Chromium viewport and keyboard tests,Physical iPhone/Safari untested
