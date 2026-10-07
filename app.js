@@ -1,60 +1,89 @@
 (() => {
   'use strict';
-  const catalog = window.MAISON_CATALOG;
-  const dialog = document.querySelector('#catalog-dialog');
-  const search = document.querySelector('#service-search');
-  const select = document.querySelector('#category-filter');
-  const results = document.querySelector('#catalog-results');
-  const count = document.querySelector('#result-count');
-  const clear = document.querySelector('#clear-search');
-  let direction = 'all', opener = null, timer;
-  const normalize = s => s.toLocaleLowerCase('uk').normalize('NFKC').replace(/[ʼ’'`\u200b\ufeff]/g, '').replace(/\s+/g, ' ').trim();
-  const escape = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  function categoryDirection(title) {
-    if (/Електроепіляція/i.test(title)) return 'electro';
-    if (/Лазерна/i.test(title)) return 'laser';
-    if (/Шугар/i.test(title)) return 'wax';
-    if (/Естетика тіла/i.test(title)) return 'body';
-    if (title === 'Масаж') return 'massage';
-    return 'cosmetology';
+  const procedures={"laser-epil":{"title":"Лазерна епіляція","direction":"laser","image":"assets/skin-feather.png","copy":"Окремі зони й комплекси для жінок та чоловіків. У Maison можна обрати свою зону або курс процедур.","facts":[["Зони й комплекси","Жіночі та чоловічі послуги можна знайти в окремих категоріях каталогу."],["Курс догляду","На оригінальному сайті студія пропонує фіксовану ціну на курс до 12 візитів. Умови уточнюються перед початком."],["Абонементи","3 процедури зі знижкою 15% або 5 процедур зі знижкою до 20%."]],"offers":[["subscription-3","3 процедури · −15%"],["subscription-5","5 процедур · до −20%"]]},"electro":{"title":"Електроепіляція","direction":"electro","image":"assets/09-electroepilation-closeup.jpg","copy":"Делікатна робота з окремими волосками для обличчя й тіла. Можна почати з тест-драйву та обрати тривалість сеансу.","facts":[["Тест-драйв","15 хвилин для знайомства з процедурою. Тривалість і вартість інших сеансів — у каталозі."],["Обличчя й тіло","Окремі категорії послуг за зоною та тривалістю. План процедур визначає фахівець."],["Пропозиція на перший візит","На оригінальній сторінці електроепіляції опубліковано −50% на перший сеанс. Деталі й доступність уточнює студія."]],"offers":[["electro-first","Перший сеанс · уточнити −50%"]]},"sugaring":{"title":"Шугаринг і віск","direction":"wax","image":"assets/skin-feather.png","copy":"Депіляція окремих зон або комплексів. Жіночі й чоловічі послуги — у власних категоріях меню Maison.","facts":[["Ваш комфорт","Фахівець допоможе обрати метод і підготуватися до процедури."],["Окремі зони й комплекси","Ціни для жінок та чоловіків, доступні комплекси й тривалість є в каталозі."],["Перше знайомство","Дізнайтеся про умови −15% на перший візит."]],"offers":[["first-visit","Перший візит · −15%"]]},"endosphere":{"title":"Ендосфера","direction":"body","image":"assets/endosphere-original.png","copy":"Апаратна процедура для догляду за тілом. Доступні все тіло, верхня або нижня частина — під ваш запит.","facts":[["Оберіть свою зону","У каталозі — все тіло, нижня й верхня частини. Доречний план обговорюється на консультації."],["Абонемент на 5 процедур","Знижка 15%. На оригінальному сайті зазначено термін дії 3 місяці."],["Абонемент на 10 процедур","Знижка 20%. На оригінальному сайті зазначено термін дії 6 місяців."]],"offers":[["endosphere-5","5 процедур · −15%"],["endosphere-10","10 процедур · −20%"]]},"criolipolis":{"title":"Кріоліполіз","direction":"body","image":"assets/04-cryolipolysis-treatment.jpg","copy":"Апаратна процедура для обраних зон тіла. Перед візитом фахівець проводить консультацію та визначає доречність процедури.","facts":[["Консультація","Обговорюємо ваш запит, зону впливу й можливі протипоказання."],["Підготовка","Фахівець оцінює обрану зону та підбирає параметри процедури."],["Окремі зони","На оригінальному сайті наведено зовнішню й внутрішню частини ніг, боки, живіт і руки. Вибір зони можна узгодити у заявці."]],"offers":[["first-visit","Перший візит · −15%"]]},"rflifting":{"title":"RF-ліфтинг","direction":"cosmetology","image":"assets/facial-original.png","copy":"Апаратний догляд за обличчям, шиєю й декольте. Процедуру та план догляду підбирає косметолог на консультації.","facts":[["Три варіанти догляду","Обличчя; обличчя та шия; обличчя, шия та декольте. Ціни й тривалість — у каталозі."],["Перед процедурою","Повідомте фахівця про стан шкіри й запитайте про підготовку та протипоказання."],["Ваш план догляду","Показання, очікування від процедури й наступні візити обговорюються індивідуально."]],"offers":[["first-visit","Перший візит · −15%"]]}};
+  const catalog=window.MAISON_CATALOG, model=window.MaisonModel;
+  const all=catalog.groups.flatMap(g=>g.services),selected=new Set();
+  const dialog=document.querySelector('#catalog-dialog'),search=document.querySelector('#service-search'),filter=document.querySelector('#category-filter'),results=document.querySelector('#catalog-results');
+  let direction='all',searchTimer;
+  const normalize=s=>s.toLocaleLowerCase('uk').normalize('NFKC').replace(/[ʼ’'`\u200b\ufeff]/g,'').replace(/\s+/g,' ').trim(),esc=model.escape;
+  function groupDirection(title){if(/Електроепіляція/i.test(title))return 'electro';if(/Лазерна/i.test(title))return 'laser';if(/Шугар/i.test(title))return 'wax';if(/Естетика тіла/i.test(title))return 'body';if(title==='Масаж')return 'massage';return 'cosmetology';}
+  for(const group of catalog.groups){const option=document.createElement('option');option.value=group.id;option.textContent=group.title;filter.append(option);}
+  function render(){
+    const words=normalize(search.value).split(' ').filter(Boolean);let total=0;
+    const groups=catalog.groups.map(g=>({...g,services:g.services.filter(s=>words.every(w=>normalize(s.name+' '+g.title+' '+s.description).includes(w)))})).filter(g=>(filter.value==='all'||filter.value===g.id)&&(direction==='all'||groupDirection(g.title)===direction)&&g.services.length);
+    results.innerHTML=groups.map(g=>{total+=g.services.length;return `<section class="catalog-category"><h3>${esc(g.title)}</h3>${g.services.map(s=>`<article class="service-row"><div><h4>${esc(s.name)}</h4>${s.description?`<details><summary>Про процедуру</summary><p>${esc(s.description)}</p></details>`:''}</div><span class="service-duration">${esc(s.duration||'Час уточнюється')}</span><span class="service-price">${esc(s.price)}</span><button class="service-go ${selected.has(s.id)?'selected':''}" data-select-service="${esc(s.id)}" aria-pressed="${selected.has(s.id)}" aria-label="${selected.has(s.id)?'Прибрати':'Додати'}: ${esc(s.name)}">${selected.has(s.id)?'✓':'+'}</button></article>`).join('')}</section>`;}).join('')||'<div class="empty-state"><h3>Спробуймо інший запит.</h3><p>Змініть назву процедури або скиньте фільтри.</p><button id="reset-filters" class="button">Показати всі послуги</button></div>';
+    document.querySelector('#result-count').textContent=`${total} із ${all.length} послуг · ${groups.length} категорій`;
+    document.querySelector('#clear-search').hidden=!search.value;
+    document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===direction)));
+    const picked=all.filter(s=>selected.has(s.id)),summary=model.total(picked);
+    document.querySelector('#selection-summary').textContent=picked.length?`${picked.length} посл. · ${summary.price} · ${summary.duration}`:'Оберіть процедури, щоб дізнатися орієнтовну вартість.';
+    document.querySelector('#selection-lead').disabled=!picked.length;
+    document.querySelector('#reset-filters')?.addEventListener('click',()=>{search.value='';filter.value='all';direction='all';render();search.focus();});
   }
-  function setDirection(value) {
-    direction = value;
-    document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter === direction)));
-  }
-  for (const group of catalog.groups) {
-    const option = document.createElement('option'); option.value=group.id;option.textContent=group.title;select.append(option);
-  }
-  function render() {
-    const query=normalize(search.value); const words=query.split(' ').filter(Boolean); let total=0;
-    const groups=catalog.groups.map(g=>({...g,services:g.services.filter(s=>words.every(w=>normalize(s.name+' '+g.title+' '+s.description).includes(w)))})).filter(g=>(select.value==='all'||select.value===g.id)&&(direction==='all'||categoryDirection(g.title)===direction)&&g.services.length);
-    const html=groups.map(g=>{total+=g.services.length;return `<section class="catalog-category"><h3>${escape(g.title)}</h3>${g.services.map(s=>{const selected=window.MaisonBooking.has(s.id);return `<article class="service-row${selected?' is-selected':''}" data-service-id="${escape(s.id)}"><div><h4>${escape(s.name)}</h4>${s.description?`<details class="service-description"><summary>Про процедуру</summary><p>${escape(s.description)}</p></details>`:''}</div><span class="service-duration">${escape(s.duration||'Час уточнюється')}</span><span class="service-price">${escape(s.price)}</span><button class="service-go" type="button" data-select-service="${escape(s.id)}" aria-pressed="${selected}" aria-label="${selected?'Прибрати':'Додати'} послугу: ${escape(s.name)}">${selected?'✓':'+'}</button></article>`;}).join('')}</section>`}).join('');
-    results.innerHTML=html||'<div class="empty-state"><h3>Спробуймо інший запит.</h3><p>Змініть назву або скиньте фільтри,<br>щоб знову побачити все меню Maison.</p><button class="button outline" id="reset-filters">Показати всі послуги <span aria-hidden="true">↗</span></button></div>';
-    count.textContent=`Знайдено: ${total} із ${catalog.groups.reduce((n,g)=>n+g.services.length,0)} послуг · ${groups.length} категорій`;
-    clear.hidden=!search.value;
-    document.querySelector('#reset-filters')?.addEventListener('click',reset);
-  }
-  function reset(){search.value='';select.value='all';setDirection('all');render();search.focus();}
-  function openCatalog(value,button){opener=button; search.value='';select.value='all';setDirection(value||'all');render();window.MaisonBooking.open('services',button);dialog.scrollTop=0;search.focus({preventScroll:true});closeMenu();}
-  document.querySelectorAll('[data-open-catalog]').forEach(b=>b.addEventListener('click',()=>openCatalog('all',b)));
-  document.querySelectorAll('[data-direction]').forEach(b=>b.addEventListener('click',()=>openCatalog(b.dataset.direction,b)));
-  document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{select.value='all';setDirection(b.dataset.filter);render();}));
-  document.querySelector('#close-catalog').addEventListener('click',()=>window.MaisonBooking.close());
-  dialog.addEventListener('keydown',e=>{
-    // A search input can consume Escape to clear itself; the dialog owns Escape.
-    if(e.key==='Escape'){e.preventDefault();e.stopPropagation();window.MaisonBooking.close();}
-  },{capture:true});
-  dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)window.MaisonBooking.close();}});
-  search.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(render,100);});
-  clear.addEventListener('click',()=>{search.value='';render();search.focus();});
-  select.addEventListener('change',()=>{setDirection('all');render();});
-  document.addEventListener('maison:selection',render);
-  document.addEventListener('maison:booking-open',closeMenu);
-  const menuButton=document.querySelector('.menu-toggle'),menu=document.querySelector('#mobile-menu');
+  const menu=document.querySelector('#mobile-menu'),menuButton=document.querySelector('.menu-toggle');
   function closeMenu(){menu.hidden=true;menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-label','Відкрити меню');}
-  menuButton.addEventListener('click',()=>{const expanded=menuButton.getAttribute('aria-expanded')==='true';menu.hidden=expanded;menuButton.setAttribute('aria-expanded',String(!expanded));menuButton.setAttribute('aria-label',expanded?'Відкрити меню':'Закрити меню');});
-  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
+  menuButton.addEventListener('click',()=>{const open=menu.hidden;menu.hidden=!open;menuButton.setAttribute('aria-expanded',String(open));menuButton.setAttribute('aria-label',open?'Закрити меню':'Відкрити меню');});
+  menu.querySelectorAll('a,button').forEach(el=>el.addEventListener('click',closeMenu));
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!menu.hidden){closeMenu();menuButton.focus();}});
-  window.addEventListener('resize',()=>{if(window.innerWidth>600)closeMenu();});
+  window.addEventListener('resize',()=>{if(innerWidth>760)closeMenu();});
+  function openCatalog(value='all'){if(procedureDialog.open)procedureDialog.close();closeMenu();search.value='';filter.value='all';direction=value;render();dialog.showModal();dialog.scrollTop=0;search.focus({preventScroll:true});}
+  document.querySelectorAll('[data-open-catalog]').forEach(b=>b.addEventListener('click',()=>openCatalog(b.dataset.openCatalog||'all')));
+  document.querySelector('#close-catalog').addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();dialog.close();}},{capture:true});
+  results.addEventListener('click',e=>{const b=e.target.closest('[data-select-service]');if(!b)return;const id=b.dataset.selectService,position=Array.from(results.querySelectorAll('[data-select-service]')).indexOf(b);if(selected.has(id))selected.delete(id);else if(selected.size<20)selected.add(id);else{document.querySelector('#selection-summary').textContent='До 20 послуг в одній заявці.';return;}render();results.querySelectorAll('[data-select-service]')[position]?.focus({preventScroll:true});});
+  search.addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer=setTimeout(render,90);});
+  document.querySelector('#clear-search').addEventListener('click',()=>{search.value='';render();search.focus();});
+  filter.addEventListener('change',()=>{direction='all';render();});
+  document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{direction=b.dataset.filter;filter.value='all';render();}));
+  const leadDialog=document.querySelector('#lead-dialog'),form=document.querySelector('#lead-form'),status=document.querySelector('#lead-status'),submit=document.querySelector('#lead-submit');
+  let requestId='',requestBody=null,pending=false;
+  function resetReceipt(){requestId='';requestBody=null;status.textContent='';status.className='form-status';document.querySelector('#lead-success').hidden=true;form.hidden=false;}
+  function openLead(source='callback'){
+    if(pending)return;closeMenu();if(procedureDialog.open)procedureDialog.close();if(dialog.open)dialog.close();resetReceipt();form.reset();form.elements.source.value=source;
+    document.querySelector('#lead-title').textContent=source==='first-visit'?'Ваш перший Maison.':source.startsWith('subscription')?'Більше турботи.':'Почнімо з вас.';
+    document.querySelector('#lead-context').textContent=source==='first-visit'?'Залиште контакти, щоб уточнити умови −15% на перший візит.':source==='subscription-3'?'Абонемент на 3 процедури лазерної епіляції · −15%.':source==='subscription-5'?'Уточнимо умови абонемента на 5 процедур лазерної епіляції: на сайті зазначено знижку до 20%.':source.startsWith('staff:')?`Побажання щодо фахівця: ${source.slice(6)}.`:'Допоможемо обрати процедуру та зручний час.';
+    const context={'electro-first':'Уточнимо умови −50% на перший сеанс електроепіляції.','endosphere-5':'Ендосфера: 5 процедур · −15%, термін дії 3 місяці.','endosphere-10':'Ендосфера: 10 процедур · −20%, термін дії 6 місяців.','original-male-laser':'Допоможемо уточнити наявність чоловічої зони з оригінального прайсу.'};if(context[source])document.querySelector('#lead-context').textContent=context[source];if(source.startsWith('procedure:'))document.querySelector('#lead-context').textContent='Ваш запит: '+(procedures[source.slice(10)]?.title||'консультація')+'.';
+    const picked=all.filter(s=>selected.has(s.id));document.querySelector('#lead-selection').textContent=picked.length?'Ваш вибір: '+picked.map(s=>s.name).join(' · '):'';
+    const zones=source==='procedure:criolipolis'?['Ноги зовнішня частина','Ноги внутрішня частина','Боки','Живіт','Руки']:source==='procedure:rflifting'?['Обличчя','Обличчя та шия','Обличчя, шия та декольте']:source==='procedure:endosphere'||source.startsWith('endosphere-')?['Тіло повністю','Нижня частина тіла','Верхня частина тіла']:source==='electro-first'?['Обличчя','Бікіні','Тіло']:source==='original-male-laser'?['Класичне бікіні','Глибоке бікіні','Лобок','Міжсіднична складка','Сідниці']:[];document.querySelector('#lead-preference-label').hidden=!zones.length;form.elements.preference.innerHTML='<option value="">Порадьте мені</option>'+zones.map(z=>`<option>${esc(z)}</option>`).join('');
+    leadDialog.showModal();form.elements.name.focus({preventScroll:true});
+  }
+  document.querySelectorAll('[data-lead]').forEach(b=>b.addEventListener('click',()=>openLead(b.dataset.lead)));
+  document.querySelector('#selection-lead').addEventListener('click',()=>openLead('catalog'));
+  document.querySelector('#close-lead').addEventListener('click',()=>{if(!pending)leadDialog.close();});
+  leadDialog.addEventListener('cancel',e=>{if(pending)e.preventDefault();});
+  for(const d of [dialog,leadDialog])d.addEventListener('click',e=>{if(e.target!==d||pending)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();});
+  form.elements.name.addEventListener('input',()=>form.elements.name.setCustomValidity(''));
+  form.elements.phone.addEventListener('input',()=>form.elements.phone.setCustomValidity(''));
+  form.addEventListener('input',()=>{if(!pending)resetReceipt();});
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();if(pending)return;
+    if(!form.elements.name.value.trim()){form.elements.name.setCustomValidity('Вкажіть ваше ім’я.');form.elements.name.reportValidity();return;}
+    const digits=form.elements.phone.value.replace(/\D/g,'');
+    if(!/^(?:380[3-9]\d{8}|0[3-9]\d{8})$/.test(digits)){form.elements.phone.setCustomValidity('Вкажіть український номер: +380 або 0 і дев’ять цифр.');form.elements.phone.reportValidity();return;}
+    if(!form.reportValidity())return;
+    if(location.protocol==='file:'||document.querySelector('meta[name="maison-leads-mode"]')?.content==='static'){status.className='form-status error';status.textContent='Для заявки зателефонуйте +380 93 170 75 54 або оберіть час в Altegio. Ця копія сайту не надсилає контактні дані.';return;}
+    const body={name:form.elements.name.value.trim(),phone:form.elements.phone.value,consent:form.elements.consent.checked,source:form.elements.source.value,services:Array.from(selected),preference:form.elements.preference.value,website:form.elements.website.value};
+    const serialized=JSON.stringify(body);if(requestBody!==serialized){requestId=crypto.randomUUID();requestBody=serialized;}
+    pending=true;submit.disabled=true;document.querySelector('#close-lead').disabled=true;status.className='form-status';status.textContent='Зберігаємо вашу заявку…';for(const field of form.elements)if(field!==submit)field.disabled=true;
+    try{
+      const response=await fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,requestId}),signal:AbortSignal.timeout(10000)});const receipt=await response.json();
+      if(!response.ok||receipt.status!=='collected'||typeof receipt.id!=='string')throw new Error(receipt.error||'unavailable');
+      form.hidden=true;document.querySelector('#lead-success').hidden=false;document.querySelector('#receipt-id').textContent=receipt.id.slice(0,8).toUpperCase();status.textContent='';document.querySelector('#lead-success-title').focus();
+    }catch(error){status.className='form-status error';status.textContent=error.message==='rate_limit'?'Забагато спроб. Зателефонуйте нам або спробуйте пізніше.':'Не вдалося підтвердити збереження заявки. Спробуйте ще раз або зателефонуйте: +380 93 170 75 54.';}
+    finally{pending=false;for(const field of form.elements)field.disabled=false;document.querySelector('#close-lead').disabled=false;}
+  });
+  document.querySelector('#lead-done').addEventListener('click',()=>leadDialog.close());
+  document.querySelector('#lead-privacy').addEventListener('click',()=>{leadDialog.close();document.querySelector('#privacy details').open=true;});
+  document.querySelectorAll('[data-detail]').forEach(b=>b.addEventListener('click',()=>{
+    const panel=document.querySelector('#'+b.dataset.detail),expanded=b.getAttribute('aria-expanded')==='true';document.querySelectorAll('[data-detail]').forEach(other=>{other.setAttribute('aria-expanded','false');document.querySelector('#'+other.dataset.detail).hidden=true;});
+    if(!expanded){b.setAttribute('aria-expanded','true');panel.hidden=false;const image=document.querySelector('#service-photo');if(b.dataset.image&&image.getAttribute('src')!==b.dataset.image){image.animate([{opacity:.55,transform:'scale(1.015)'},{opacity:1,transform:'scale(1)'}],{duration:matchMedia('(prefers-reduced-motion: reduce)').matches?0:420,easing:'cubic-bezier(.2,.7,.2,1)'});image.src=b.dataset.image;image.alt=b.dataset.alt;}}
+  }));
+  const procedureDialog=document.querySelector('#procedure-dialog');
+  function openProcedure(key){const p=procedures[key];if(!p)return;closeMenu();document.querySelector('#procedure-title').textContent=p.title;document.querySelector('#procedure-copy').textContent=p.copy;const image=document.querySelector('#procedure-image');image.src=p.image;image.alt=p.title+' — матеріал студії';document.querySelector('#procedure-facts').innerHTML=p.facts.map(([title,copy])=>`<article><h3>${esc(title)}</h3><p>${esc(copy)}</p></article>`).join('');document.querySelector('#procedure-offers').innerHTML=p.offers.map(([source,title])=>`<button class="text-link" data-procedure-lead="${esc(source)}">${esc(title)} <span aria-hidden="true">↗</span></button>`).join('');document.querySelector('#procedure-prices').dataset.procedureFilter=p.direction;document.querySelector('#procedure-consultation').dataset.procedureLead='procedure:'+key;procedureDialog.showModal();procedureDialog.scrollTop=0;document.querySelector('#procedure-title').focus({preventScroll:true});}
+  document.querySelectorAll('[data-procedure]').forEach(b=>b.addEventListener('click',()=>openProcedure(b.dataset.procedure)));
+  procedureDialog.addEventListener('click',e=>{const b=e.target.closest('[data-procedure-lead]');if(b)openLead(b.dataset.procedureLead);});
+  document.querySelector('#procedure-prices').addEventListener('click',e=>openCatalog(e.currentTarget.dataset.procedureFilter));
+  document.querySelector('#close-procedure').addEventListener('click',()=>procedureDialog.close());
+  const track=document.querySelector('#review-track');document.querySelectorAll('[data-review-step]').forEach(b=>b.addEventListener('click',()=>track.scrollBy({left:Number(b.dataset.reviewStep)*(track.clientWidth*.82+24),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})));
   render();
 })();
