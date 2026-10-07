@@ -2,19 +2,21 @@
   "business": {
     "name": "Maison Esthétique",
     "company_id": "1328326",
-    "booking_url": "https://n1394458.alteg.io/company/1328326/personal/menu",
+    "booking_url": "https://n1394458.alteg.io",
     "address_exact": "вулиця Костянтинівська, 37",
     "city_verified": true,
     "hours": "Пн-Нд 09:00-21:00",
     "phone": "+380 93 170-75-54",
     "website_listed": "https://maisonesthetique.com.ua/",
-    "website_result": "net::ERR_NAME_NOT_RESOLVED",
+    "website_result": "HTTP 200; original public content and seven linked pages verified 2026-10-07",
     "ui_language": "uk",
     "catalog_note": "Some service descriptions contain Russian text; do not infer a language switch.",
     "city": "Київ",
     "city_source": "Public supplied Instagram profile address and title, visually verified.",
     "catalog_count": 195,
-    "categories_count": 23
+    "categories_count": 23,
+    "booking_mode": "External official Altegio; no internal calendar or SMS",
+    "lead_mode": "Validated local persistent collection; no CRM or admin notification connected"
   },
   "sources": {
     "menu": "https://n1394458.alteg.io/company/1328326/personal/menu",
@@ -66,5 +68,5 @@
     "Шугарінг/Віск Жіночий",
     "Масаж"
   ],
-  "verified_at": "2026-10-04"
+  "verified_at": "2026-10-07"
 }

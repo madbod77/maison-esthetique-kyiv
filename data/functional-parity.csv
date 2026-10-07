@@ -1,10 +1,10 @@
 Capability,Implementation,Verification boundary,Remaining limit
-Catalog195/23,Own page search/category/directions/details,Snapshot195unique23groups preserved,Prices are snapshot04.10.2026 until official connection
-Multiple services and totals,Own state and model,Local fixture multi-selection/removal/totals,20 services per appointment
-Staff compatibility,Own UI + server API,Fallback4 staff visible; API fixture compatible staff,Live API access needed
-Date time next available,Own calendar + server API,Only API slots; disconnected calendar explicitly blocked,Live API access needed
-Contact consent SMS confirmation,Own form + server API,Mock transport tests only; no real SMS/reservations,Authorized integration not connected
-Booking submission,Server-side recheck and same-session deduplication,Malformed timeout500response locks uncertain result,Persistent idempotency required before public production
-Payment agreements cancellation,Unsupported advanced rules fail closed,No payments/cancellation performed,Additional integration work needed for required flows
-Images contact sections Apple style,Existing assets/content preserved,Manifest byte comparison and browser views,No public publication
-Mobile keyboard motion,Responsive native dialog and controls,Chromium viewport and keyboard tests,Physical iPhone/Safari untested
+Catalog195/23,Search/category/directions/details + multi-selection,All195 services and23groups match live Altegio on07.10.2026,Authoritative changes remain in Altegio
+Multiple services and totals,Local catalog state and model,Selection/removal/price/duration checked,Max20 chosen services; no availability claim
+Booking,All booking links official https://n1394458.alteg.io,Internal booking DOM absent; legacy API responds410,No real reservation made
+Lead collection,Required name/phone/consent; source/services/procedure preference,"Local persistent API, durable retry, validation and failure checked",No delivery to studio/CRM connected
+Original procedure functions,"Six local info dialogs, offers, zones and5extra male brochure prices",Original seven linked pages reconciled,Five missing Altegio zones require inquiry; ambiguous5visit discount clarified
+Reviews,Eight untouched source screenshots with swipe/keyboard/arrows,11found11processed8accepted3rejected0manual,Three Elenis-labelled screenshots excluded
+Brand and images,Original mint/white/gray/black and original10assets,Asset SHA equality; actual desktop/mobile rendered,No generated photos
+Motion,Native WAAPI reveal and bounded scroll motion,Final site replay/scroll and runtime reduced motion; independent fixture47checks,Physical Safari/iPhone untested
+Static copy,Self-contained HTML and static folder,Inlined procedure images and honest lead fallback,Requires Node backend for persisted leads

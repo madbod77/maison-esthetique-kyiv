@@ -7,15 +7,19 @@ const catalog = JSON.parse(await readFile(path.join(root,'data/catalog.json'),'u
 await writeFile(path.join(root,'data/catalog.js'),`window.MAISON_CATALOG=${JSON.stringify(catalog)};\n`);
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
-for (const name of ['index.html','styles.css','app.js','booking.js','booking-model.js','assets','data']) await cp(path.join(root,name), path.join(dist,name),{recursive:true});
+for (const name of ['index.html','styles.css','app.js','motion.js','booking-model.js','assets']) await cp(path.join(root,name), path.join(dist,name),{recursive:true});
+await mkdir(path.join(dist,'data'));
+await cp(path.join(root,'data/catalog.js'),path.join(dist,'data/catalog.js'));
 let html = await readFile(path.join(root,'index.html'),'utf8');
+html=html.replace('</head>','<meta name="maison-leads-mode" content="static">\n</head>');
+await writeFile(path.join(dist,'index.html'),html);
 const mime = {'.jpg':'image/jpeg','.jpeg':'image/jpeg','.png':'image/png','.webp':'image/webp','.woff2':'font/woff2','.svg':'image/svg+xml'};
 const dataURL = async p => `data:${mime[path.extname(p)]};base64,${(await readFile(path.join(root,p))).toString('base64')}`;
 let css=await readFile(path.join(root,'styles.css'),'utf8');
 for (const m of [...css.matchAll(/url\(['"]?(assets\/[^)'"\s]+)['"]?\)/g)]) css=css.replaceAll(m[0],`url('${await dataURL(m[1])}')`);
 html=html.replace(/<link\b[^>]*href=["']styles\.css["'][^>]*>/,`<style>${css}</style>`);
 let inlineScripts='';
-for (const src of ['data/catalog.js','booking-model.js','booking.js','app.js']) {
+for (const src of ['data/catalog.js','booking-model.js','app.js','motion.js']) {
   html=html.replace(new RegExp(`<script\\b[^>]*src=["']${src.replaceAll('.','\\.')}["'][^>]*><\\/script>`),'');
   inlineScripts+=`<script>${(await readFile(path.join(root,src),'utf8')).replaceAll('</script','<\\/script')}</script>`;
 }

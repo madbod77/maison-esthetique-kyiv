@@ -1,0 +1,116 @@
+{
+  "verified_at": "2026-10-07",
+  "palette": [
+    "#89DCC2",
+    "#FFFFFF",
+    "#F3F3F3",
+    "#151515"
+  ],
+  "booking_url": "https://n1394458.alteg.io",
+  "original_added_images": [
+    {
+      "file": "assets/facial-original.png",
+      "sha256": "4db58c8c79a12c0fb4a3b94b9fb707c42dff79919428d37a198d5909077e8b5b",
+      "source_url": "https://static.tildacdn.net/tild3931-6633-4237-b164-303233663837/photo.png",
+      "source_page": "https://maisonesthetique.com.ua"
+    },
+    {
+      "file": "assets/hero-original.png",
+      "sha256": "caa87e4fdab420ee8bc70d77b9cf7f5c47edb144ce7cdec1bec9df39ca9ef8f6",
+      "source_url": "https://static.tildacdn.net/tild6531-6461-4462-b663-666361303834/noroot.png",
+      "source_page": "https://maisonesthetique.com.ua"
+    },
+    {
+      "file": "assets/skin-feather.png",
+      "sha256": "0f426f31d429c4e28ab1c507598904fd40f4898941b9727a8aadab1e6f9cad08",
+      "source_url": "https://static.tildacdn.net/tild6633-3135-4233-b766-313834323365/__.png",
+      "source_page": "https://maisonesthetique.com.ua"
+    },
+    {
+      "file": "assets/treatment-original.png",
+      "sha256": "f0877109bca26a83bff6dc0ae51d439d19477fd5b755182f69fdd7fe31f5f635",
+      "source_url": "https://static.tildacdn.net/tild3264-3966-4230-a634-366463613033/image.png",
+      "source_page": "https://maisonesthetique.com.ua"
+    },
+    {
+      "url": "https://static.tildacdn.net/tild3134-6433-4162-b439-636366343162/___Instagram_45_1.png",
+      "page": "https://maisonesthetique.com.ua/endosphere",
+      "file": "assets/endosphere-original.png",
+      "sha256": "131b2803a9c733e95ea09b80f804072c3da1f7242015d14b378324bc8b886c4d",
+      "verified": "Fetched public original and visually inspected applicator on body; image now used for actual endosphere procedure, replaces unrelated manualmassage photo"
+    }
+  ],
+  "reviews": {
+    "expected": 11,
+    "found": 11,
+    "processed": 11,
+    "accepted": 8,
+    "rejected": [
+      {
+        "file": "assets/review-original-02.jpg",
+        "reason": "Image names Elenis Studio, including left-bank branch; current Maison provenance is unverified. Excluded from local carousel."
+      },
+      {
+        "file": "assets/review-original-03.jpg",
+        "reason": "Image names Elenis Studio, including left-bank branch; current Maison provenance is unverified. Excluded from local carousel."
+      },
+      {
+        "file": "assets/review-original-06.jpg",
+        "reason": "Image names Elenis Studio, including left-bank branch; current Maison provenance is unverified. Excluded from local carousel."
+      }
+    ],
+    "manual_review": 0,
+    "retained_function": "Swipe/keyboard/button review carousel using8original published screenshots, no invented aggregate rating"
+  },
+  "fonts": "Playfair Display local normal/italic latin+cyrillic subsets; system UI font",
+  "review_images": [
+    {
+      "file": "assets/review-original-01.jpg",
+      "source_page": "https://maisonesthetique.com.ua",
+      "sha256": "37344d3a5b3779d4ade4375863ba060f908d7224efebeca8afb0e10b37a87d28",
+      "description": "Untouched original published review screenshot; manually inspected"
+    },
+    {
+      "file": "assets/review-original-04.jpg",
+      "source_page": "https://maisonesthetique.com.ua",
+      "sha256": "5be8c8e8eecf3b6ce2a07eac05e651cfc36727c6a1ac5e94002afa2b9db33de7",
+      "description": "Untouched original published review screenshot; manually inspected"
+    },
+    {
+      "file": "assets/review-original-05.jpg",
+      "source_page": "https://maisonesthetique.com.ua",
+      "sha256": "de086576e3ab0cbe6d80faac3e12b6121e1449f7bf2eba730cd2d80220b6541e",
+      "description": "Untouched original published review screenshot; manually inspected"
+    },
+    {
+      "file": "assets/review-original-07.jpg",
+      "source_page": "https://maisonesthetique.com.ua",
+      "sha256": "b3c2c611710b9821f4f3dbb8bf6418575b5a75a96f68efec35752095d01831ec",
+      "description": "Untouched original published review screenshot; manually inspected"
+    },
+    {
+      "file": "assets/review-original-08.jpg",
+      "source_page": "https://maisonesthetique.com.ua",
+      "sha256": "75bc852a8377f0994c6bccd3ac894ba77a1ce7d0131d42f73b73fd62833eef52",
+      "description": "Untouched original published review screenshot; manually inspected"
+    },
+    {
+      "file": "assets/review-original-09.jpg",
+      "source_page": "https://maisonesthetique.com.ua",
+      "sha256": "659ddb03740f50a4f3c88d7e0be1aabedb43b0ecb2aaa7ec24435a6a63f211e0",
+      "description": "Untouched original published review screenshot; manually inspected"
+    },
+    {
+      "file": "assets/review-original-10.jpg",
+      "source_page": "https://maisonesthetique.com.ua",
+      "sha256": "368660a2b1e7786cd00aab980349e56c535de836ea871b1ecc18cfc3f6e36a34",
+      "description": "Untouched original published review screenshot; manually inspected"
+    },
+    {
+      "file": "assets/review-original-11.jpg",
+      "source_page": "https://maisonesthetique.com.ua",
+      "sha256": "c0d9b18c9bbc6edaeb7794c174871b0991be1f7962583ae8b7d44f4c58a207dd",
+      "description": "Untouched original published review screenshot; manually inspected"
+    }
+  ]
+}
