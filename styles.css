@@ -57,3 +57,68 @@ dialog{padding:0;border:0;color:var(--ink);box-shadow:0 20px 100px #0003}dialog:
 .review-controls button{display:inline-flex;align-items:center;justify-content:center}
 .service-go .ui-icon{width:18px;height:18px}
 .success-icon .ui-icon{width:24px;height:24px}
+
+/* Append after the existing Maison CSS. No markup, palette or layout changes. */
+:root{--maison-motion-ease:cubic-bezier(.22,1,.36,1)}
+
+/* Only decorative SVGs move; control boxes and keyboard focus stay stationary. */
+@media(prefers-reduced-motion:no-preference){
+  :is(a,button) .ui-icon--up-right,
+  :is(a,button) .ui-icon--right,
+  :is(a,button) .ui-icon--down{
+    transition:translate 90ms var(--maison-motion-ease),scale 120ms var(--maison-motion-ease);
+  }
+  :is(a,button):active .ui-icon--up-right{translate:1px -1px;scale:.92}
+  :is(a,button):active .ui-icon--right{translate:1px 0;scale:.92}
+  :is(a,button):active .ui-icon--down{translate:0 1px;scale:.92}
+  .menu-toggle span{transition:transform 180ms var(--maison-motion-ease)}
+  .menu-toggle[aria-expanded=true] span:first-child{transform:translateY(3px) rotate(45deg)}
+  .menu-toggle[aria-expanded=true] span:last-child{transform:translateY(-3px) rotate(-45deg)}
+
+  /* Opacity on dialog/menu shells never changes geometry or delays app focus. */
+  :is(.catalog-dialog,.lead-dialog,.procedure-dialog)[open]{animation:maison-surface-in 240ms var(--maison-motion-ease)}
+  :is(.catalog-dialog,.lead-dialog,.procedure-dialog)[open]::backdrop{animation:maison-backdrop-in 240ms var(--maison-motion-ease)}
+  .catalog-dialog[open] .dialog-top h2,
+  .lead-dialog[open] .lead-content>.eyebrow,
+  .lead-dialog[open] .lead-content>h2,
+  .procedure-dialog[open] .procedure-content>.eyebrow,
+  .procedure-dialog[open] #procedure-copy{animation:maison-copy-in 360ms var(--maison-motion-ease)}
+  .lead-dialog[open] .lead-art img,
+  .procedure-dialog[open] .procedure-photo img{animation:maison-image-in 520ms var(--maison-motion-ease)}
+  .lead-dialog .lead-art,.procedure-dialog .procedure-photo{overflow:hidden}
+
+  .mobile-menu:not([hidden]){animation:maison-surface-in 220ms var(--maison-motion-ease)}
+  .mobile-menu:not([hidden]) nav>*{animation:maison-nav-in 260ms var(--maison-motion-ease) backwards}
+  .mobile-menu:not([hidden]) nav>:nth-child(2){animation-delay:24ms}
+  .mobile-menu:not([hidden]) nav>:nth-child(3){animation-delay:48ms}
+  .mobile-menu:not([hidden]) nav>:nth-child(4){animation-delay:72ms}
+  .mobile-menu:not([hidden]) nav>:nth-child(5){animation-delay:96ms}
+  .mobile-menu:not([hidden]) nav>:nth-child(6){animation-delay:120ms}
+
+  .faq-list details[open]>p,
+  .direction-detail:not([hidden])>p{animation:maison-copy-in 300ms var(--maison-motion-ease)}
+}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  :is(a,button):hover .ui-icon--up-right{translate:3px -3px}
+  :is(a,button):hover .ui-icon--right{translate:4px 0}
+  :is(a,button):hover .ui-icon--down{translate:0 4px}
+  /* Keep press feedback more compact than hover even while the pointer stays above it. */
+  :is(a,button):active .ui-icon--up-right{translate:1px -1px}
+  :is(a,button):active .ui-icon--right{translate:1px 0}
+  :is(a,button):active .ui-icon--down{translate:0 1px}
+}
+@keyframes maison-surface-in{from{opacity:.72}to{opacity:1}}
+@keyframes maison-backdrop-in{from{opacity:.55}to{opacity:1}}
+@keyframes maison-copy-in{from{opacity:.4;translate:0 10px}to{opacity:1;translate:0 0}}
+@keyframes maison-image-in{from{scale:1.035}to{scale:1}}
+@keyframes maison-nav-in{from{opacity:.62}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){
+  /* Stop existing site transitions too, rather than leaving a one-frame .001ms effect. */
+  *,*::before,*::after,*::backdrop{animation:none!important;transition:none!important}
+  :is(.catalog-dialog,.lead-dialog,.procedure-dialog)[open],
+  :is(.catalog-dialog,.lead-dialog,.procedure-dialog)[open]::backdrop,
+  :is(.catalog-dialog,.lead-dialog,.procedure-dialog)[open] *,
+  .mobile-menu:not([hidden]),.mobile-menu:not([hidden]) nav>*,
+  .faq-list details[open]>p,.direction-detail:not([hidden])>p{animation:none!important}
+  :is(a,button) .ui-icon,.menu-toggle span{transition:none!important}
+}
