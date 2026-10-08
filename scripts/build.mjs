@@ -17,10 +17,10 @@ const mime = {'.jpg':'image/jpeg','.jpeg':'image/jpeg','.png':'image/png','.webp
 const dataURL = async p => `data:${mime[path.extname(p)]};base64,${(await readFile(path.join(root,p))).toString('base64')}`;
 let css=await readFile(path.join(root,'styles.css'),'utf8');
 for (const m of [...css.matchAll(/url\(['"]?(assets\/[^)'"\s]+)['"]?\)/g)]) css=css.replaceAll(m[0],`url('${await dataURL(m[1])}')`);
-html=html.replace(/<link\b[^>]*href=["']styles\.css["'][^>]*>/,`<style>${css}</style>`);
+html=html.replace(/<link\b[^>]*href=["']styles\.css(?:\?[^"']*)?["'][^>]*>/,`<style>${css}</style>`);
 let inlineScripts='';
 for (const src of ['data/catalog.js','booking-model.js','app.js','motion.js']) {
-  html=html.replace(new RegExp(`<script\\b[^>]*src=["']${src.replaceAll('.','\\.')}["'][^>]*><\\/script>`),'');
+  html=html.replace(new RegExp(`<script\\b[^>]*src=["']${src.replaceAll('.','\\.')}(?:\\?[^"']*)?["'][^>]*><\\/script>`),'');
   inlineScripts+=`<script>${(await readFile(path.join(root,src),'utf8')).replaceAll('</script','<\\/script')}</script>`;
 }
 // Inline scripts must run after DOM creation; defer does not apply to inline scripts.
